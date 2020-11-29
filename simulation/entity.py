@@ -10,11 +10,18 @@ def random_number():
 class WorldEntity:
     newid = itertools.count(100, 1)
 
-    def __init__(self, mediator, name):
-        self.name = name
+    def __init__(self, name,mediator):
         self.id = next(WorldEntity.newid)
+        self.name = name
         self.mediator = mediator
-        self.state = State()
+
+    def notify(self, message):
+        print(self.name, ": >>> Out >>> : ", message)
+        self.mediator.notify(message, self)
+
+    def receive(self, message):
+        print(self.name, ": <<< In <<< : ", message)
+
 
     @staticmethod
     def create_message(sender: object, receiver: str, message: object, extra: object = None) -> object:
@@ -26,13 +33,5 @@ class WorldEntity:
         }
         return message
 
-    def notify(self, message):
-        print(self.name , ": >>> Out >>> : " , message)
-        self.mediator.notify(message, self)
-
-    def receive(self, message):
-        print(self.name ,": <<< In <<< : " ,message)
-
     def update(self):
-        self.state.action(random_number())
-        self.notify(self.create_message(self.id, 'entities', self.state.state_id, ))
+        pass

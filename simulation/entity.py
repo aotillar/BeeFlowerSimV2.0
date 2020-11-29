@@ -8,7 +8,7 @@ def random_number():
 
 
 class WorldEntity:
-    newid = itertools.count(100, 1)
+    newid = itertools.count(1000)
 
     def __init__(self, name,mediator):
         self.id = next(WorldEntity.newid)
@@ -33,5 +33,3 @@ class WorldEntity:
         }
         return message
 
-    def update(self):
-        pass

@@ -13,6 +13,14 @@ class Flower(WorldEntity):
         self.state = State()
         self.mediator = mediator
 
+    def notify(self, message):
+        print(self.name, ": >>> Out >>> : ", message)
+        self.mediator.notify(message, self)
+
+    def receive(self, message):
+        print(self.name, ": <<< In <<< : ", message)
+
+
     def update(self):
         self.state.action(1)
-        self.notify(self.create_message(self.id, 'entities', self.state.state_id, ))
+        self.notify(self.create_message(self.id, 'bee', self.state.state_id, ))

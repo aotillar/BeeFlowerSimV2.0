@@ -11,6 +11,14 @@ class TemperatureModel(WorldEntity):
         self.mediator = mediator
         self.id = next(TemperatureModel.newid)
 
+    def notify(self, message):
+        print(self.name, ": >>> Out >>> : ", message)
+        self.mediator.notify(message, self)
+
+    def receive(self, message):
+        print(self.name, ": <<< In <<< : ", message)
+
+
     def temp_north_day_high(self, thigh, tlow, day):
         """This function uses a trigonometric function and transposes it
         to fit the thigh, tlow. This model assumes that temperature changes

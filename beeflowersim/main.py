@@ -9,8 +9,9 @@ class App:
         self.current_environment.initialize()
 
         x = 0
-        while x == 0:
+        while x <= 10:
             self.current_environment.update()
+            x += 1
 
 
 

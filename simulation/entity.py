@@ -10,17 +10,10 @@ def random_number():
 class WorldEntity:
     newid = itertools.count(1000)
 
-    def __init__(self, name,mediator):
+    def __init__(self, name, mediator):
         self.id = next(WorldEntity.newid)
         self.name = name
         self.mediator = mediator
-
-    def notify(self, message):
-        print(self.name, ": >>> Out >>> : ", message)
-        self.mediator.notify(message, self)
-
-    def receive(self, message):
-        print(self.name, ": <<< In <<< : ", message)
 
 
     @staticmethod
@@ -32,4 +25,3 @@ class WorldEntity:
             'extra': extra
         }
         return message
-

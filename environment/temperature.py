@@ -74,4 +74,3 @@ def random_daily_temperature(high_lrg, high_lw, low_lrg, low_lw, day):
     y2 = temp_north_day_low(low_lrg, low_lw, day)
     y_average = (y1 + y2) / 2
     return np.random.normal(y_average, 10)
-

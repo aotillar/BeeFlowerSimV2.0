@@ -1,4 +1,4 @@
-from GIT.simulation import entity, mediator
+from BFS.simulation import entity, mediator
 
 
 def main_loop():
@@ -14,6 +14,8 @@ def main_loop():
     x = 0
     while x == 0:
         c1.update()
+        c2.update()
+        c3.update()
 
 
 main_loop()

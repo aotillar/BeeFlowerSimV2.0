@@ -60,7 +60,7 @@ class State_C(State):
             self.new_state(State_C)
 
 
-class Component():
+class Component:
     newid = itertools.count()
 
     def __init__(self, mediator, name, starting_state):
@@ -84,7 +84,7 @@ class Component():
         self.notify(self.state.state_id)
 
 
-class World():
+class World:
     newid = itertools.count()
 
     def __init__(self, mediator, name):

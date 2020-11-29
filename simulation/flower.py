@@ -4,11 +4,11 @@ import itertools
 
 
 class Flower(WorldEntity):
-    newid = itertools.count(200, 1)
+    newid = itertools.count(3000)
 
     def __init__(self, mediator, name):
         super().__init__(mediator, name)
-        self.id = next(WorldEntity.newid)
+        self.id = next(Flower.newid)
         self.name = name
         self.state = State()
         self.mediator = mediator

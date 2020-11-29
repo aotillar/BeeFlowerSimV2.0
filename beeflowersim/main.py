@@ -1,22 +1,37 @@
-from BFS.simulation import entity, mediator
+from BFS.simulation import mediator, bee , flower
 
 
-def main_loop():
-    mdr = mediator.Mediator()
-    c1 = entity.WorldEntity(mdr, 'c1')
-    c2 = entity.WorldEntity(mdr, 'c2')
-    c3 = entity.WorldEntity(mdr, 'c3')
+class App:
+    def __init__(self):
+        self.entities = []
+        self.mdr = mediator.Mediator()
 
-    mdr.add(c1)
-    mdr.add(c2)
-    mdr.add(c3)
+    def initialize(self):
+        self.create_bees(5)
+        self.create_flowers(5)
+        for ENTITY in self.entities:
+            self.mdr.add(ENTITY)
 
-    x = 0
-    while x == 0:
-        c1.update()
-        c2.update()
-        c3.update()
+    def create_bees(self,bee_number):
+        for i in range(0, bee_number):
+            x = bee.Bee(self.mdr, 'Bee {number}'.format(number=i))
+            self.entities.append(x)
 
+    def create_flowers(self,flower_number):
+        for i in range(0, flower_number):
+            x = flower.Flower(self.mdr, 'Flower {number}'.format(number=i))
+            self.entities.append(x)
+
+    def main_loop(self):
+        self.initialize()
+
+        x = 0
+        while x == 0:
+            for ENTITY in self.entities:
+                ENTITY.update()
+
+
+app = App()
 
 if __name__ == '__main__':
-    main_loop()
+    app.main_loop()

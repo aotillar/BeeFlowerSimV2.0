@@ -18,4 +18,5 @@ def main_loop():
         c3.update()
 
 
-main_loop()
+if __name__ == '__main__':
+    main_loop()

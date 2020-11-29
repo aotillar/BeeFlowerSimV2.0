@@ -8,8 +8,10 @@ class Ecosystem:
         self.entities = []
         self.mdr = mediator.Mediator()
         self.name = name
+
         # Current Ecosystem Variables
         # Temperature Water etc
+
         self.day_counter = 0
         self.temperature = temperature.TemperatureModel('temperature', self.mdr)
 

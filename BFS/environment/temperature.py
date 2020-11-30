@@ -13,7 +13,7 @@ class TemperatureModel(WorldEntity):
         self.id = next(TemperatureModel.newid)
 
     def notify(self, message):
-        # print(self.id,self.name, ": >>> Out >>> : ", message)
+        #print(self.id,self.name, ": >>> Out >>> : ", message)
         self.mediator.notify(message, self)
 
     def receive(self, message):

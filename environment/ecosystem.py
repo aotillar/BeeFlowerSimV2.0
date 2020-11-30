@@ -1,5 +1,6 @@
 from BFS.simulation import mediator, bee, flower
 from BFS.environment import temperature
+import time
 
 
 class Ecosystem:
@@ -16,12 +17,14 @@ class Ecosystem:
         self.temperature = temperature.TemperatureModel('temperature', self.mdr)
 
     def initialize(self):
-        self.create_bees(5)
-        self.create_flowers(5)
+        self.create_bees(2)
+        self.create_flowers(2)
         for ENTITY in self.entities:
             self.mdr.add(ENTITY)
 
         self.mdr.add(self.temperature)
+        print("ENVIRONMENT ENTITIES LIST", self.entities)
+        print("MDR ENTITIES",self.mdr.components)
 
     def create_bees(self, bee_number):
         for i in range(0, bee_number):
@@ -34,12 +37,24 @@ class Ecosystem:
             self.entities.append(x)
 
     def update(self):
-        self.day_counter += 0
+        tin = time.perf_counter()
 
+        self.day_counter += 0
         self.temperature.update(102.7, 65.5, 49.6, 18, self.day_counter)
 
         for ENTITY in self.entities:
+            print('          ')
+            print('          ')
+            print('########### {en} NOW UPDATING: '.format(en=ENTITY))
             ENTITY.update()
 
         if self.day_counter >= 365:
             self.day_counter = 0
+
+        tout = time.perf_counter()
+        print(tout-tin)
+        print('          ')
+        print('*--------------------------NEW DAY------------------------------*')
+        print('          ')
+        print('          ')
+        print('          ')

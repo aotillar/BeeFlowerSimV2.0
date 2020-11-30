@@ -1,6 +1,7 @@
 from .entity import WorldEntity
 from .state_machine import State
 import itertools
+from operator import itemgetter
 
 
 class Bee(WorldEntity):
@@ -16,6 +17,7 @@ class Bee(WorldEntity):
         self.current_flower_message = None
         self.current_bee_message = None
         self.current_environment_message = None
+        self.current_environment_temperature = None
 
     def notify(self, message):
         print(self.name, ": >>> Out >>> : ", message)
@@ -24,6 +26,9 @@ class Bee(WorldEntity):
     def receive(self, message):
         print(self.name, ": <<< In <<< : ", message)
         self.messages.append(message)
+
+    def clear_messages(self):
+        self.messages.clear()
 
     def process_messages(self):
         """This function introduces control logic for dealing with messages, so that
@@ -35,17 +40,57 @@ class Bee(WorldEntity):
         into an integer to make it more easy to work with. I will use this until a better method is
         found.
         """
-        for message in self.messages:
-            if int(str(message['sender'])) == self.id:
-                self.messages.remove(message)
-            if int(str(message['sender'])[:1]) == 3 and message['receiver'] == 'bee':
-                print('I recieved a message from flowers')
-                self.current_flower_message = self.messages.remove(message)
-            if int(str(message['sender'])[:1]) == 4 and message['receiver'] == 'all':
-                print('I recieved a message from environment')
-                self.current_environment_message = self.messages.remove(message)
+        flower_messages = []
+        bee_messages = []
+        environment_messages = []
+        print('    BEE LENGTH OF SELF.MESSAGES',len(self.messages))
+        while self.messages:
+            for message in self.messages:
+                print('    BEE PROCESS: SENDER NUMBER ID',int(str(message['sender'])))
+                if int(str(message['sender'])) == self.id:
+                    print('            1B REMOVED A MESSAGE')
+                    self.messages.remove(message)
+                if int(str(message['sender'])[:1]) == 3:
+                    flower_messages.append(message)
+                    self.messages.remove(message)
+                    print('            2B REMOVED A MESSAGE')
+                if int(str(message['sender'])[:1]) == 2:
+                    bee_messages.append(message)
+                    self.messages.remove(message)
+                    print('            3B REMOVED A MESSAGE')
+                if int(str(message['sender'])) == 4001:
+                    environment_messages.append(message)
+                    print('    INSIDE IF',environment_messages)
+                    print('    B        Added and Environment message')
+                    self.messages.remove(message)
+                    print('            4B REMOVED A MESSAGE')
+
+        print('BEE ENVIRONMENT MESSAGES BEFORE SORT', environment_messages)
+        print('BEE FLOWER MESSAGES BEFORE SORT', bee_messages)
+        print('BEE MESSAGES BEFORE SORT', flower_messages)
+        print(' ')
+        flower_messages = sorted(flower_messages, key=itemgetter('time'))
+        if flower_messages:
+            print('FM',True)
+            self.current_flower_message = flower_messages.pop()
+        bee_messages = sorted(bee_messages, key=itemgetter('time'))
+        if bee_messages:
+            print('BM',True)
+            self.current_bee_message = bee_messages.pop()
+        environment_messages = sorted(environment_messages, key=itemgetter('time'))
+        if environment_messages:
+            print('EM',True)
+            self.current_environment_message = environment_messages.pop()
+            print('INSIDE EM', self.current_environment_message)
+        print('BEE ENVIRONMENT MESSAGES AFTER SORT', environment_messages)
+        print('BEE MESSAGES AFTER SORT', bee_messages)
+        print('BEE MESSAGES AFTER SORT', flower_messages)
+        self.current_environment_temperature = self.current_environment_message['message']
+        self.messages.clear()
 
     def update(self):
         self.state.action(1)
         self.process_messages()
+        print('BEE CURRENT TEMP',self.current_environment_temperature)
+        print('*****-----**END OF BEE UPDATE**-----*****')
         self.notify(self.create_message(self.id, 'bee', self.state.state_id, ))

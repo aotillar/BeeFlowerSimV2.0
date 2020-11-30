@@ -1,6 +1,6 @@
 from BFS.simulation import mediator, bee, flower
 from BFS.environment import temperature
-import time
+
 
 class Ecosystem:
 

@@ -1,4 +1,3 @@
-from .state_machine import State
 import random as rn
 import itertools
 import time

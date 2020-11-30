@@ -1,6 +1,6 @@
 import numpy as np
 import itertools
-from ..simulation import WorldEntity
+from .e import WorldEntity
 
 
 class TemperatureModel(WorldEntity):

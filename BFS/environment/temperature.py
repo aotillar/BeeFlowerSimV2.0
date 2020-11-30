@@ -13,14 +13,15 @@ class TemperatureModel(WorldEntity):
         self.id = next(TemperatureModel.newid)
 
     def notify(self, message):
-        #print(self.id,self.name, ": >>> Out >>> : ", message)
+        # print(self.id,self.name, ": >>> Out >>> : ", message)
         self.mediator.notify(message, self)
 
     def receive(self, message):
         # print(self.name, ": <<< In <<< : ", message)
         pass
 
-    def temp_north_day_high(self, thigh, tlow, day):
+    @staticmethod
+    def temp_north_day_high(thigh, tlow, day):
         """This function uses a trigonometric function and transposes it
         to fit the thigh, tlow. This model assumes that temperature changes
         uniformly throughout the year according to a standard wave function.
@@ -37,7 +38,8 @@ class TemperatureModel(WorldEntity):
         else:
             return y
 
-    def temp_north_day_low(self, thigh, tlow, day):
+    @staticmethod
+    def temp_north_day_low(thigh, tlow, day):
         x = np.linspace(0, 365, 365)
         a = (thigh - tlow) / 2
         d = (thigh + tlow) / 2
@@ -49,7 +51,8 @@ class TemperatureModel(WorldEntity):
         else:
             return y
 
-    def temp_south_day_high(self, thigh, tlow, day=None):
+    @staticmethod
+    def temp_south_day_high(thigh, tlow, day=None):
         x = np.linspace(0, 365, 365)
         a = (thigh - tlow) / 2
         d = (thigh + tlow) / 2
@@ -59,7 +62,8 @@ class TemperatureModel(WorldEntity):
         else:
             return y
 
-    def temp_south_day_low(self, thigh, tlow, day=None):
+    @staticmethod
+    def temp_south_day_low(thigh, tlow, day=None):
         x = np.linspace(0, 365, 365)
         a = (thigh - tlow) / 2
         d = (thigh + tlow) / 2
@@ -69,7 +73,8 @@ class TemperatureModel(WorldEntity):
         else:
             return y
 
-    def temp_hour(self, thigh, tlow, hour=None):
+    @staticmethod
+    def temp_hour(thigh, tlow, hour=None):
         """This function uses a trigonometric function and transposes it
             to fit the thigh, tlow. This model assumes that temperature changes
             uniformly throughout the year according to a standard wave function.

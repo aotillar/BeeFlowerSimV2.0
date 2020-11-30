@@ -11,16 +11,17 @@ class App:
         self.current_environment.initialize()
 
         x = 0
-        while x <= 365:
+        while x <= 730:
             self.current_environment.update()
             x += 1
         tout = time.perf_counter()
-        print('Total Program Execution:',tout-tin)
+        print('Total Program Execution:', tout - tin)
 
 
 app = App()
 
 if __name__ == '__main__':
     import cProfile
+
     cProfile.run('app.main_loop()')
     # app.main_loop()

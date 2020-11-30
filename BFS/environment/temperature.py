@@ -1,6 +1,6 @@
 import numpy as np
 import itertools
-from .e import WorldEntity
+from BFS.simulation.entity import WorldEntity
 
 
 class TemperatureModel(WorldEntity):

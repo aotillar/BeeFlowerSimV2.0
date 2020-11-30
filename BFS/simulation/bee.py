@@ -1,5 +1,5 @@
-from .entity import WorldEntity
-from .state_machine import State
+from BFS.simulation.entity import WorldEntity
+from BFS.simulation.state_machine import State
 import itertools
 from operator import itemgetter
 import random as rn

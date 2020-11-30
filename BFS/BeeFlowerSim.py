@@ -21,4 +21,6 @@ class App:
 app = App()
 
 if __name__ == '__main__':
-    app.main_loop()
+    import cProfile
+    cProfile.run('app.main_loop()')
+    # app.main_loop()

@@ -1,7 +1,6 @@
 from BFS.simulation.entity import WorldEntity
 from BFS.simulation.state_machine import State
 import itertools
-from operator import itemgetter
 import random as rn
 
 
@@ -18,7 +17,7 @@ class Bee(WorldEntity):
         self.name = name
         self.state = State()
         self.mediator = mediator
-        self.messages = []
+        self.messages = dict()
         self.current_flower_message = None
         self.current_bee_message = None
         self.current_environment_message = None
@@ -33,11 +32,10 @@ class Bee(WorldEntity):
         self.mediator.notify(message, self)
 
     def receive(self, message):
+        message_id = 0
         # print(self.name, ": <<< In <<< : ", message)
-        # TODO: Change how messages are stored in each entity. Lists are costing us way too much.
-        #   we need to use DICTIONARIES.
-        if message['receiver'] == 'bee' or message['receiver'] == 'all':
-            self.messages.append(message)
+        self.messages[message_id] = message
+        message_id += 1
 
     def clear_messages(self):
         self.messages.clear()
@@ -57,18 +55,28 @@ class Bee(WorldEntity):
         """
 
         while self.messages:
-            for message in self.messages:
-                if int(str(message['sender'])) == self.id:
-                    self.messages.remove(message)
-                if int(str(message['sender'])[:1]) == 3 and message in self.messages:
-                    self.flower_messages.append(message)
-                    self.messages.remove(message)
-                if int(str(message['sender'])[:1]) == 2 and message in self.messages:
-                    self.bee_messages.append(message)
-                    self.messages.remove(message)
-                if int(str(message['sender'])) == 4001 and message in self.messages:
-                    self.environment_messages.append(message)
-                    self.messages.remove(message)
+            for key, value in self.messages.copy().items():
+                if int(str(value['sender'])[:1]) == 3:
+                    self.current_flower_message = value
+                    del self.messages[key]
+                if int(str(value['sender'])[:1]) == 2:
+                    self.current_bee_message = value
+                    del self.messages[key]
+                if int(str(value['sender'])[:1]) == 4:
+                    self.current_environment_message = value
+                    del self.messages[key]
+
+                # if int(str(message['sender'])) == self.id:
+                #     self.messages.remove(message)
+                # if int(str(message['sender'])[:1]) == 3 and message in self.messages:
+                #     self.flower_messages.append(message)
+                #     self.messages.remove(message)
+                # if int(str(message['sender'])[:1]) == 2 and message in self.messages:
+                #     self.bee_messages.append(message)
+                #     self.messages.remove(message)
+                # if int(str(message['sender'])) == 4001 and message in self.messages:
+                #     self.environment_messages.append(message)
+                #     self.messages.remove(message)
 
     def process_current_messages(self):
         if self.flower_messages:
@@ -88,6 +96,6 @@ class Bee(WorldEntity):
     def update(self):
         self.state.action(1)
         self.process_incoming_messages()
-        self.process_current_messages()
-        if self.current_environment_temperature <= 32:
-            self.notify(self.create_message(self.id, 'flower', self.state.state_id, ))
+        # self.process_current_messages()
+        # if self.current_environment_temperature <= 32:
+        self.notify(self.create_message(self.id, 'bee', self.state.state_id, ))

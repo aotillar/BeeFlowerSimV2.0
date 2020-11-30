@@ -16,8 +16,8 @@ class StateA(State):
     state_id = 'a'
 
     def action(self, x):
-        print('Inside State A')
-        time.sleep(.1)
+        # print('Inside State A')
+        # time.sleep(.1)
         if x == 1:
             self.new_state(StateB)
         else:
@@ -28,8 +28,8 @@ class StateB(State):
     state_id = 'b'
 
     def action(self, x):
-        print('Inside State B')
-        time.sleep(.1)
+        # print('Inside State B')
+        # time.sleep(.1)
         if x == 1:
             self.new_state(StateC)
         else:
@@ -40,8 +40,8 @@ class StateC(State):
     state_id = 'c'
 
     def action(self, x):
-        print('Inside State C')
-        time.sleep(.1)
+        # print('Inside State C')
+        # time.sleep(.1)
         if x == 1:
             self.new_state(StateA)
         else:

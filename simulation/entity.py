@@ -1,6 +1,7 @@
 from .state_machine import State
 import random as rn
 import itertools
+import time
 
 
 def random_number():
@@ -22,6 +23,7 @@ class WorldEntity:
             'sender': sender,
             'receiver': receiver,
             'message': message,
+            'time':time.perf_counter(),
             'extra': extra
         }
         return message

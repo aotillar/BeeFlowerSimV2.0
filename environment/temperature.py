@@ -4,7 +4,8 @@ from ..simulation import WorldEntity
 
 
 class TemperatureModel(WorldEntity):
-    newid = itertools.count(4000)
+    newid = itertools.count(4001)
+
     def __init__(self, name, mediator):
         super().__init__(name, mediator)
         self.name = name
@@ -12,12 +13,12 @@ class TemperatureModel(WorldEntity):
         self.id = next(TemperatureModel.newid)
 
     def notify(self, message):
-        print(self.name, ": >>> Out >>> : ", message)
+        # print(self.id,self.name, ": >>> Out >>> : ", message)
         self.mediator.notify(message, self)
 
     def receive(self, message):
-        print(self.name, ": <<< In <<< : ", message)
-
+        # print(self.name, ": <<< In <<< : ", message)
+        pass
 
     def temp_north_day_high(self, thigh, tlow, day):
         """This function uses a trigonometric function and transposes it
@@ -89,6 +90,7 @@ class TemperatureModel(WorldEntity):
         return np.random.normal(y_average, 10)
 
     def update(self, high_lrg, high_lw, low_lrg, low_lw, day):
+
         dail_temperature = self.random_daily_temperature(high_lrg, high_lw, low_lrg, low_lw, day)
-        daily_temp_message = self.create_message(self.id,'all',dail_temperature)
+        daily_temp_message = self.create_message(self.id, 'all', dail_temperature)
         self.notify(daily_temp_message)

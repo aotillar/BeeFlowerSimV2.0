@@ -2,6 +2,9 @@ import time
 
 
 class State:
+    """
+    State Base Class
+    """
     def __init__(self):
         self.new_state(StateA)
 

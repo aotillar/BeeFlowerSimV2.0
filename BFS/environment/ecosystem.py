@@ -16,8 +16,8 @@ class Ecosystem:
         self.temperature = temperature.TemperatureModel('temperature', self.mdr)
 
     def initialize(self):
-        self.create_bees(100)
-        self.create_flowers(100)
+        self.create_bees(10)
+        self.create_flowers(10)
         for ENTITY in self.entities:
             self.mdr.add(ENTITY)
 
@@ -35,7 +35,7 @@ class Ecosystem:
 
     def update(self):
         self.day_counter += 0
-        self.temperature.update(102.7, 65.5, 49.6, 28, self.day_counter)
+        self.temperature.update(102.7, 65.5, 49.6, 18, self.day_counter)
 
         for ENTITY in self.entities:
             ENTITY.update()

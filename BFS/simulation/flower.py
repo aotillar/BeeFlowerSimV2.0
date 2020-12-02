@@ -21,14 +21,14 @@ class Flower(WorldEntity):
         self.current_flower_message = None
         self.current_bee_message = None
         self.current_environment_message = None
-        self.current_environment_temperature = None
+        self.current_environment_temperature = rn.randint(18,74)
 
         self.flower_messages = []
         self.bee_messages = []
         self.environment_messages = []
 
     def notify(self, message):
-        # print(self.name, ": >>> Out >>> : ", message)
+        print(self.name, ": >>> Out >>> : ", message)
         self.mediator.notify(message, self)
 
     def receive(self, message):
@@ -66,36 +66,14 @@ class Flower(WorldEntity):
                     self.current_environment_message = value
                     del self.messages[key]
 
-                # if int(str(message['sender'])) == self.id:
-                #     self.messages.remove(message)
-                # if int(str(message['sender'])[:1]) == 3 and message in self.messages:
-                #     self.flower_messages.append(message)
-                #     self.messages.remove(message)
-                # if int(str(message['sender'])[:1]) == 2 and message in self.messages:
-                #     self.bee_messages.append(message)
-                #     self.messages.remove(message)
-                # if int(str(message['sender'])) == 4001 and message in self.messages:
-                #     self.environment_messages.append(message)
-                #     self.messages.remove(message)
-
     def process_current_messages(self):
-        if self.flower_messages:
-            # self.current_flower_message = max(self.flower_messages, key=itemgetter('time'))
-            self.current_flower_message = self.flower_messages.pop()
-        if self.bee_messages:
-            # self.current_bee_message = max(self.bee_messages, key=itemgetter('time'))
-            self.current_bee_message = self.bee_messages.pop()
-        if self.environment_messages:
-            # self.current_environment_message = max(self.environment_messages, key=itemgetter('time'))
-            self.current_environment_message = self.environment_messages.pop()
-
         self.current_environment_temperature = self.current_environment_message['message']
-        # print('Flower',self.id,self.current_environment_temperature)
+        print('Flower',self.id,self.current_environment_temperature)
         self.messages.clear()
 
     def update(self):
-        self.state.action(1)
+        self.state.action(self.current_environment_temperature)
         self.process_incoming_messages()
-        # self.process_current_messages()
-        # if self.current_environment_temperature <= 32:
-        self.notify(self.create_message(self.id, 'bee', self.state.state_id, ))
+        self.process_current_messages()
+        if self.current_environment_temperature <= 32:
+            self.notify(self.create_message(self.id, 'bee', self.state.state_id, ))

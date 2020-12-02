@@ -11,7 +11,7 @@ class App:
         self.current_environment.initialize()
 
         x = 0
-        while x <= 730:
+        while x <= 365:
             self.current_environment.update()
             x += 1
         tout = time.perf_counter()

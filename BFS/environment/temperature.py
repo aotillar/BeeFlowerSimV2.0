@@ -11,6 +11,7 @@ class TemperatureModel(WorldEntity):
         self.name = name
         self.mediator = mediator
         self.id = next(TemperatureModel.newid)
+        self.current_temperature = 0
 
     def notify(self, message):
         # print(self.id,self.name, ": >>> Out >>> : ", message)
@@ -27,7 +28,7 @@ class TemperatureModel(WorldEntity):
         uniformly throughout the year according to a standard wave function.
         Once the function is transposed, it then uses day as an x variable
         to get the according y value(temperature) for that particular day"""
-        x = np.linspace(0, 365, 365)
+        x = np.linspace(0, 366, 366)
         a = (thigh - tlow) / 2
         d = (thigh + tlow) / 2
         y = a * np.cos((2 * np.pi / 365) * (x - 182.5)) + d
@@ -40,7 +41,7 @@ class TemperatureModel(WorldEntity):
 
     @staticmethod
     def temp_north_day_low(thigh, tlow, day):
-        x = np.linspace(0, 365, 365)
+        x = np.linspace(0, 366, 366)
         a = (thigh - tlow) / 2
         d = (thigh + tlow) / 2
         y = a * np.cos((2 * np.pi / 365) * (x - 182.5)) + d
@@ -53,7 +54,7 @@ class TemperatureModel(WorldEntity):
 
     @staticmethod
     def temp_south_day_high(thigh, tlow, day=None):
-        x = np.linspace(0, 365, 365)
+        x = np.linspace(0, 366, 366)
         a = (thigh - tlow) / 2
         d = (thigh + tlow) / 2
         y = a * -np.cos((2 * np.pi / 365) * (x - 182.5)) + d
@@ -64,7 +65,7 @@ class TemperatureModel(WorldEntity):
 
     @staticmethod
     def temp_south_day_low(thigh, tlow, day=None):
-        x = np.linspace(0, 365, 365)
+        x = np.linspace(0, 366, 366)
         a = (thigh - tlow) / 2
         d = (thigh + tlow) / 2
         y = a * -np.cos((2 * np.pi / 365) * (x - 182.5)) + d
@@ -97,5 +98,7 @@ class TemperatureModel(WorldEntity):
     def update(self, high_lrg, high_lw, low_lrg, low_lw, day):
 
         dail_temperature = self.random_daily_temperature(high_lrg, high_lw, low_lrg, low_lw, day)
+        self.current_temperature = dail_temperature
         daily_temp_message = self.create_message(self.id, 'all', dail_temperature)
         self.notify(daily_temp_message)
+        # return daily_temp_message

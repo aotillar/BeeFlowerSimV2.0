@@ -20,22 +20,18 @@ class Flower(WorldEntity):
         self.messages = dict()
         self.current_flower_message = None
         self.current_bee_message = None
-        self.current_environment_message = None
-        self.current_environment_temperature = rn.randint(18,74)
-
-        self.flower_messages = []
-        self.bee_messages = []
-        self.environment_messages = []
+        self.current_environment_message = {}
+        self.current_environment_temperature = None
+        self.current_incoming_message_id = 0
 
     def notify(self, message):
-        print(self.name, ": >>> Out >>> : ", message)
+        # print(self.name, ": >>> Out >>> : ", message)
         self.mediator.notify(message, self)
 
     def receive(self, message):
-        message_id = 0
         # print(self.name, ": <<< In <<< : ", message)
-        self.messages[message_id] = message
-        message_id += 1
+        self.messages[self.current_incoming_message_id] = message
+        self.current_incoming_message_id += 1
 
     def clear_messages(self):
         self.messages.clear()
@@ -53,7 +49,6 @@ class Flower(WorldEntity):
         into an integer to make it more easy to work with. I will use this until a better method is
         found.
         """
-
         while self.messages:
             for key, value in self.messages.copy().items():
                 if int(str(value['sender'])[:1]) == 3:
@@ -63,17 +58,15 @@ class Flower(WorldEntity):
                     self.current_bee_message = value
                     del self.messages[key]
                 if int(str(value['sender'])[:1]) == 4:
+                    # print('Inside Flower {id} INCOMING: '.format(id=self.id),value)
                     self.current_environment_message = value
                     del self.messages[key]
 
     def process_current_messages(self):
         self.current_environment_temperature = self.current_environment_message['message']
-        print('Flower',self.id,self.current_environment_temperature)
-        self.messages.clear()
+        # print('Flower ',self.id,'TEMP: ',self.current_environment_temperature)
 
     def update(self):
         self.state.action(self.current_environment_temperature)
-        self.process_incoming_messages()
-        self.process_current_messages()
         if self.current_environment_temperature <= 32:
             self.notify(self.create_message(self.id, 'bee', self.state.state_id, ))

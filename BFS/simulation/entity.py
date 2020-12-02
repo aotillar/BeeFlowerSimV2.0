@@ -15,14 +15,13 @@ class WorldEntity:
         self.name = name
         self.mediator = mediator
 
-
     @staticmethod
     def create_message(sender: object, receiver: str, message: object, extra: object = None) -> object:
         message = {
             'sender': sender,
             'receiver': receiver,
             'message': message,
-            'time':time.perf_counter(),
+            'time': time.perf_counter(),
             'extra': extra
         }
         return message

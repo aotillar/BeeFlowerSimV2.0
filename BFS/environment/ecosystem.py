@@ -14,8 +14,9 @@ class Ecosystem:
         be taken apart from the GUI and dun on its own.
         :param name: Name of the Ecosystem: Eg. Forest, Mountain
         """
+        self.event_types = ['bee','flower','temp','none']
         self.entities = []
-        self.mdr = mediator.Mediator()
+        self.mdr = mediator.Mediator(self.event_types)
         self.name = name
 
         # Current Ecosystem Variables
@@ -29,12 +30,15 @@ class Ecosystem:
         A Function which Initializes all of the different entities in the Simulation.
         Currently these are Bees and Flowers
         """
-        self.create_bees(250)
-        self.create_flowers(250)
+        self.create_bees(2)
+        self.create_flowers(2)
         for ENTITY in self.entities:
-            self.mdr.add(ENTITY)
+            self.mdr.register('temp',ENTITY)
 
-        self.mdr.add(self.temperature)
+        self.mdr.register('none',self.temperature)
+
+    def register_for_bee_events(self):
+        pass
 
     def create_bees(self, bee_number):
         """
@@ -48,6 +52,7 @@ class Ecosystem:
         """
         for i in range(0, bee_number):
             x = bee.Bee(self.mdr, 'Bee {number}'.format(number=i))
+            self.mdr.register('bee',x)
             self.entities.append(x)
 
     def create_flowers(self, flower_number):
@@ -61,6 +66,7 @@ class Ecosystem:
         """
         for i in range(0, flower_number):
             x = flower.Flower(self.mdr, 'Flower {number}'.format(number=i))
+            self.mdr.register('flower', x)
             self.entities.append(x)
 
     def update(self) -> None:

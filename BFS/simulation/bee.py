@@ -24,12 +24,12 @@ class Bee(WorldEntity):
         self.current_environment_temperature = None
         self.current_incoming_message_id = 0
 
-    def notify(self, message):
-        # print(self.name, ": >>> Out >>> : ", message)
-        self.mediator.notify(message, self)
+    def notify(self,event, message):
+        print(self.name, ": >>> Out >>> : ", message)
+        self.mediator.notify(event,message)
 
     def receive(self, message):
-        # print(self.name, ": <<< In <<< : ", message)
+        print(self.name, ": <<< In <<< : ", message)
         self.messages[self.current_incoming_message_id] = message
         self.current_incoming_message_id += 1
 
@@ -70,4 +70,4 @@ class Bee(WorldEntity):
     def update(self):
         self.state.action(self.current_environment_temperature)
         if self.current_environment_temperature <= 32:
-            self.notify(self.create_message(self.id, 'bee', self.state.state_id, ))
+            self.notify('bee',self.create_message(self.id, 'bee', self.state.state_id, ))

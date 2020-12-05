@@ -13,13 +13,12 @@ class TemperatureModel(WorldEntity):
         self.id = next(TemperatureModel.newid)
         self.current_temperature = 0
 
-    def notify(self,event, message):
+    def notify(self, event, message):
         # print(self.id,self.name, ": >>> Out >>> : ", message)
-        self.mediator.notify(event,message)
+        self.mediator.notify(event, message)
 
     def receive(self, message):
         print(self.name, ": <<< In <<< : ", message)
-
 
     @staticmethod
     def temp_north_day_high(thigh, tlow, day):
@@ -100,5 +99,5 @@ class TemperatureModel(WorldEntity):
         dail_temperature = self.random_daily_temperature(high_lrg, high_lw, low_lrg, low_lw, day)
         self.current_temperature = dail_temperature
         daily_temp_message = self.create_message(self.id, 'all', dail_temperature)
-        self.notify('temp',daily_temp_message)
+        self.notify('temp', daily_temp_message)
         # return daily_temp_message

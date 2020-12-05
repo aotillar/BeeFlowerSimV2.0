@@ -79,5 +79,3 @@ class HydrologyModel(WorldEntity):
         zz = rbf(xx, yy)
 
         return zz
-
-# TODO: Seems to be returning negative precipitation. Must look into this.

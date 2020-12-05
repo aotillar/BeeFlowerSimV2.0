@@ -73,8 +73,10 @@ class Ecosystem:
 
     def create_monthly_precipitation_girds(self):
         for i in range(1, 13):
-            self.precip_gids[i] = self.hydrology.interpolate(self.width, self.height,
+            grid = self.hydrology.interpolate(self.width, self.height,
                                                              100, i, 6, self.hydrology.tcf_monthly_precipitation)
+            grid[grid<0] = 0
+            self.precip_gids[i] = grid
 
     def register_for_bee_events(self):
         pass

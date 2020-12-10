@@ -36,7 +36,7 @@ class HydrologyModel(WorldEntity):
         :param x: Numerical month 1-12
         :return: average daily precipitation in mm
         """
-        return -3.554318e+02 + 9.461590e+02 * x - 8.375958e+02 * x ** 2 + 3.640662e+02 * x ** 3\
+        return -3.554318e+02 + 9.461590e+02 * x - 8.375958e+02 * x ** 2 + 3.640662e+02 * x ** 3 \
                - 8.735626e+01 * x ** 4 + 1.214157e+01 * x ** 5 - 9.741451e-01 * x ** 6 + 4.191430e-02 * x ** 7 \
                - 7.495953e-04 * x ** 8
 
@@ -81,3 +81,26 @@ class HydrologyModel(WorldEntity):
         zz = rbf(xx, yy)
 
         return zz
+
+"""
+This is an implementation of the precipitation model using 3d arrays. Each z level will be a different hydrological 
+model container. level 1 = soil, level 2 = subsoil level 3 = groundwater etc...
+Each ndarray will have the same x,y coordinates as the entire simulation, thus, if I want to know the 
+current amount of water in the subsoil at x,y (3,4) all I need to do is query the 3d precipitation model array
+hydro_grid[3,4,1]. This data structure will only hold the resultant values from the precipitation model.
+
+Thus various methods in the hydrological model will have to take a slice out of the model, update all of its 
+squares, say for instance evapotranspiration, and then reassign that level in the array the new grid.
+
+The hope is that his can all be done simultaneously while the simulation is running, however if resources are 
+limited, then all of the precipitation/temperature/radiation etc can be calculated at startup, and then referenced
+throughout the duration of the flower/bee simulation run.
+
+"""
+
+hyd = HydrologyModel('model', 'mdr')
+precip_grid = hyd.interpolate(0, 10, 10, 1, 3, hyd.tcf_monthly_precipitation)
+arr = np.zeros((10,10,3))
+arr[:,:,1] = precip_grid
+print(precip_grid[5,5])
+print(arr[5,5,1])

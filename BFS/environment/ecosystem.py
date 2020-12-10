@@ -26,11 +26,11 @@ class Ecosystem:
         self.dayNumber = 0
         self.dayCounter = 0
         self.weekCounter = 0
-        self.monthCounter = 0
         self.seasonCounter = 0
         self.evolveCounter = 0
         self.year = 2018
         self.date = datetime.date(self.year, 1, 1)
+        self.monthCounter = datetime.date(self.year, 1, 1)
         self.time_step_per_day_counter = 0
         self.time_step_per_day_limit = 1
 
@@ -46,7 +46,7 @@ class Ecosystem:
         self.height = 100
         self.precip_gids = dict()
 
-    def initialize(self):
+    def initialize(self,bee_num,flower_num):
         """
         A Function which Initializes all of the different entities in the Simulation.
         Currently these are Bees and Flowers.
@@ -54,11 +54,15 @@ class Ecosystem:
         This function also initializes all of the interpolated hydrology and temperature
         grids, before the simulation runs, in order to keep processing time during
         the simulation free.
+        :param flower_num: Number of bees to be initialized
+        :param bee_num: Number of Flowers to be initialized
+        :type flower_num: int
+        :type bee_num: int
         """
         # Create Entities and add them to the environment
 
-        self.create_bees(100)
-        self.create_flowers(100)
+        self.create_bees(bee_num)
+        self.create_flowers(flower_num)
 
         # Register them with the Mediator/Message Interface
         for ENTITY in self.entities:
@@ -69,14 +73,14 @@ class Ecosystem:
         self.mdr.register('none', self.hydrology)
 
         # Calculate all of the monthly precipitation grids
-        self.create_monthly_precipitation_girds()
+        self.create_monthly_precipitation_grids()
 
-    def create_monthly_precipitation_girds(self):
-        for i in range(1, 13):
+    def create_monthly_precipitation_grids(self):
+        for month in range(1, 13):
             grid = self.hydrology.interpolate(self.width, self.height,
-                                                             100, i, 6, self.hydrology.tcf_monthly_precipitation)
-            grid[grid<0] = 0
-            self.precip_gids[i] = grid
+                                              100, month, 6, self.hydrology.tcf_monthly_precipitation)
+            grid[grid < 0] = 0
+            self.precip_gids[month] = grid
 
     def register_for_bee_events(self):
         pass
@@ -91,10 +95,10 @@ class Ecosystem:
         :rtype: None
 
         """
-        for i in range(0, bee_number):
+        for new_bee in range(0, bee_number):
             x = np.random.randint(0, self.height)
             y = np.random.randint(0, self.height)
-            x = bee.Bee(self.mdr, 'Bee {number}'.format(number=i),x,y)
+            x = bee.Bee(self.mdr, 'Bee {number}'.format(number=new_bee), x, y)
             self.mdr.register('bee', x)
             self.entities.append(x)
 
@@ -107,10 +111,10 @@ class Ecosystem:
         :param flower_number: This is an Integer of the number of flowers that will be created
         :type flower_number: int
         """
-        for i in range(0, flower_number):
-            x = np.random.randint(0,self.height)
+        for new_flower in range(0, flower_number):
+            x = np.random.randint(0, self.height)
             y = np.random.randint(0, self.height)
-            x = flower.Flower(self.mdr, 'Flower {number}'.format(number=i),x,y)
+            x = flower.Flower(self.mdr, 'Flower {number}'.format(number=new_flower), x, y)
             self.mdr.register('flower', x)
             self.entities.append(x)
 
@@ -119,6 +123,8 @@ class Ecosystem:
         self.monthCounter = datetime.date(self.year, 1, 1) + datetime.timedelta(self.year_day_counter)
         if self.year_day_counter > 365:
             self.year_day_counter = 0
+        print(self.year_day_counter)
+        print(self.monthCounter)
 
     def update(self) -> None:
         """
@@ -141,14 +147,10 @@ class Ecosystem:
         for ENTITY in self.entities:
             ENTITY.update()
 
-
-
-
-
-
         # print(self.day_counter)
         # print('*--------------------------NEW DAY------------------------------*')
         # print(' ')
+
 
 if __name__ == '__main__':
     e = Ecosystem('e')

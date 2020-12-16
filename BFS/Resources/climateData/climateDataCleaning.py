@@ -1,4 +1,15 @@
 import pandas as pd
+'''
+This File takes NOAA GLOBAL HOURLY data in the form of CSV and cleans
+certain columns of data. The Data is often represented with compound
+formats like data_we_care_about,QualityCodes,OtherJunk,Data_WeCareAbout.
+The data is also scaled so that decimals are avoided, so isolation
+and manipulation are required. This will work with any data that can be
+downloaded from the HOURLY GLOBAL from here
+
+https://gis.ncdc.noaa.gov/maps/ncei/cdo/hourly
+
+'''
 
 file_names = [
     'Ashville Airport NC.csv',
@@ -17,7 +28,43 @@ file_names = [
 ]
 
 
+def clean_wind_speed(filename):
+    """
+    This Method Takes in a CSV file from the GLOBAL HOURLY Dataset from NOAA.
+    It then converts it into a Pandas Dataframe, to make manipulation of
+    row.column data easier.
+
+    :param filename:
+    """
+    av = pd.read_csv(filename)
+    newData = []
+    if av['WND'].dtypes == 'object':
+        if 'WND' in av:
+            print("Cleaning WND", filename)
+            for row in av['WND']:
+                data = row[8:12]
+                if data == '0000':
+                    newData.append('NaN')
+                else:
+                    newData.append(float(data) / 10.0)
+
+            x = newData
+            av.WND = x
+            av.to_csv(filename)
+    else:
+        pass
+
+
 def clean_temp(filename):
+    """
+        This Method Takes in a CSV file from the GLOBAL HOURLY Dataset from NOAA.
+        It then converts it into a Pandas Dataframe, to make manipulation of
+        row.column data easier.
+
+        Temperature is in Celsius
+
+        :param filename:
+        """
     print("Cleaning Temperature", filename)
     av = pd.read_csv(filename)
     newData = []
@@ -39,6 +86,17 @@ def clean_temp(filename):
 
 
 def clean_dew(filename):
+    """
+        This Method Takes in a CSV file from the GLOBAL HOURLY Dataset from NOAA.
+        It then converts it into a Pandas Dataframe, to make manipulation of
+        row.column data easier.
+
+        The temperature to which a given parcel of air must be cooled at constant pressure and water vapor
+        content in order for saturation to occur.
+         MIN: -0982 MAX: +0368 UNITS: Degrees Celsius
+
+        :param filename:
+        """
     print("Cleaning Dew", filename)
     av = pd.read_csv(filename)
     newData = []
@@ -60,6 +118,16 @@ def clean_dew(filename):
 
 
 def clean_slp(filename):
+    """
+        This Method Takes in a CSV file from the GLOBAL HOURLY Dataset from NOAA.
+        It then converts it into a Pandas Dataframe, to make manipulation of
+        row.column data easier.
+
+        The average pressure at the observed point for the day derived computationally from other QC’ed elements
+        MIN: 04500 MAX: 10900 UNITS: hectopascals
+
+        :param filename:
+        """
     av = pd.read_csv(filename)
     newData = []
     if av['SLP'].dtypes == 'object':
@@ -80,6 +148,16 @@ def clean_slp(filename):
 
 
 def clean_precip(filename):
+    """
+        This Method Takes in a CSV file from the GLOBAL HOURLY Dataset from NOAA.
+        It then converts it into a Pandas Dataframe, to make manipulation of
+        row.column data easier.
+
+        The depth of LIQUID-PRECIPITATION that is measured at the time of an observation.
+        MIN: 0000 MAX: 9998 UNITS: millimeters
+
+        :param filename:
+        """
     print("Cleaning Precipitation", filename)
     av = pd.read_csv(filename)
     location = av.columns.get_loc('AA1')
@@ -258,4 +336,4 @@ for file in file_names:
     clean_dew(file)
     clean_slp(file)
     clean_precip(file)
-
+    clean_wind_speed(file)

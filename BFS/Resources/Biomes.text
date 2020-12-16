@@ -1,5 +1,22 @@
 Major Biomes of the World
 
+Data was gathered from NOAA
+
+https://gis.ncdc.noaa.gov/maps/ncei/cdo/hourly
+https://www.ncei.noaa.gov/access/search/data-search/global-hourly
+
+Documentation for each column Acronym can be found here
+
+https://www.ncei.noaa.gov/data/global-hourly/doc/isd-format-document.pdf
+
+* name* indicates that place was used for that particular Biomes Data
+
+These datasets are not perfect, and more robust datasets can be found,
+The bulk of the work done in climate Cleaner was so that ANY file of
+this type, Global HOURLY from NOAA could be processed and cleaned
+for ease of use.
+
+
 Temperate Deciduous Forest
     Washington D.C.
     *Ashville NC*

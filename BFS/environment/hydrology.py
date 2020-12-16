@@ -20,6 +20,7 @@ class HydrologyModel(WorldEntity):
     def receive(self, message):
         print(self.name, ": <<< In <<< : ", message)
 
+
     @staticmethod
     def tcf_monthly_temperature(x):
         """

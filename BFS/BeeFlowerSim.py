@@ -8,7 +8,7 @@ class App:
 
     def main_loop(self):
         tin = time.perf_counter()
-        self.current_environment.initialize()
+        self.current_environment.initialize(100, 100)
 
         x = 0
         while x <= 365:

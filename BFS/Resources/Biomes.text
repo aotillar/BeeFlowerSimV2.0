@@ -1,0 +1,88 @@
+Major Biomes of the World
+
+Data was gathered from NOAA
+
+https://gis.ncdc.noaa.gov/maps/ncei/cdo/hourly
+https://www.ncei.noaa.gov/access/search/data-search/global-hourly
+
+Documentation for each column Acronym can be found here
+
+https://www.ncei.noaa.gov/data/global-hourly/doc/isd-format-document.pdf
+
+* name* indicates that place was used for that particular Biomes Data
+
+These datasets are not perfect, and more robust datasets can be found,
+The bulk of the work done in climate Cleaner was so that ANY file of
+this type, Global HOURLY from NOAA could be processed and cleaned
+for ease of use.
+
+
+Temperate Deciduous Forest
+    Washington D.C.
+    *Ashville NC*
+        24,6,1 precipitation data
+        AA1-AA2
+
+Temperate Grasslands
+    *Odessa Ukraine*
+        12 hour intermittent * Dont Use for precip
+        AA1
+    *Burlington Carson Airport CO*
+        24,6,1 hour Precipitation
+        AA1-AA3
+
+Temperate Rainforest
+    *Nagasaki Japan*
+        no Precipitation
+    *UNZENDAKE, JA*
+        12,6 hour precipitation
+    Pacific Northwest
+
+Trpoical Rainforest
+    Bogor, Java Indonesia
+    *BOGOR CITEKO, ID*
+        24,3,6 precipitation
+        AA1-AA2
+
+Tropical Dry Decidous Forest
+    Darwin Australia
+    *DARWIN INTERNATIONAL, AS*
+        24,6 hour precipitaiton
+        AA1-AA2
+
+Savanna
+    *GRASSLANDS, ZI 2017*
+        24,6 hour precipitation
+        AA1
+    *WEDZA, ZI 2018*
+    Harare, Zimbabwe
+        24 hour precipitation
+        AA1
+    Africa, South America, Australia,India
+
+
+Desert
+    *Cairo Egypt*
+        24,6,3 Precipitation
+        AA1
+
+Tundra
+    *IM E K FEDOROVA, RS*
+        12 hour precipitation
+        AA1
+    Vaigach, Russia
+    Northern Canada
+
+Boreal Forest (Taiga)
+    Alaska, Canada, Russia
+    Archangelsk, Russia
+    *TALAGI, RS*
+        12 hour precipitation
+        AA1
+
+Chaparrral
+    *NIKOS KAZANTZAKIS, GR*
+        24,6 hour precipitation
+        AA1-AA2
+    Los Angeles CA
+    Mediterranean Sea, Southern Australia,Coastal Chile

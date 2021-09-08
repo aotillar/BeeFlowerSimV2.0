@@ -1,5 +1,8 @@
 from BFS.simulation import mediator, bee, flower
 from BFS.environment import temperature
+from BFS.environment import hydrology
+import numpy as np
+import datetime
 
 
 class Ecosystem:
@@ -14,27 +17,73 @@ class Ecosystem:
         be taken apart from the GUI and dun on its own.
         :param name: Name of the Ecosystem: Eg. Forest, Mountain
         """
+        self.event_types = ['bee', 'flower', 'temp', 'hydrology', 'none']
         self.entities = []
-        self.mdr = mediator.Mediator()
+        self.mdr = mediator.Mediator(self.event_types)
         self.name = name
 
-        # Current Ecosystem Variables
+        # Simulations Time Variables
+        self.dayNumber = 0
+        self.dayCounter = 0
+        self.weekCounter = 0
+        self.seasonCounter = 0
+        self.evolveCounter = 0
+        self.year = 2018
+        self.date = datetime.date(self.year, 1, 1)
+        self.monthCounter = datetime.date(self.year, 1, 1)
+        self.time_step_per_day_counter = 0
+        self.time_step_per_day_limit = 1
+
+        # Current Ecosystem Models
         # Temperature Water etc
 
-        self.day_counter = -1
+        self.year_day_counter = -1
         self.temperature = temperature.TemperatureModel('temperature', self.mdr)
+        self.hydrology = hydrology.HydrologyModel('hydrology', self.mdr)
 
-    def initialize(self):
+        # Current Ecosystem Variables
+        self.width = 0
+        self.height = 100
+        self.precip_gids = dict()
+
+    def initialize(self,bee_num,flower_num):
         """
         A Function which Initializes all of the different entities in the Simulation.
-        Currently these are Bees and Flowers
-        """
-        self.create_bees(250)
-        self.create_flowers(250)
-        for ENTITY in self.entities:
-            self.mdr.add(ENTITY)
+        Currently these are Bees and Flowers.
 
-        self.mdr.add(self.temperature)
+        This function also initializes all of the interpolated hydrology and temperature
+        grids, before the simulation runs, in order to keep processing time during
+        the simulation free.
+        :param flower_num: Number of bees to be initialized
+        :param bee_num: Number of Flowers to be initialized
+        :type flower_num: int
+        :type bee_num: int
+        """
+        # Create Entities and add them to the environment
+
+        self.create_bees(bee_num)
+        self.create_flowers(flower_num)
+
+        # Register them with the Mediator/Message Interface
+        for ENTITY in self.entities:
+            self.mdr.register('temp', ENTITY)
+
+        # Register the Temperature and Hydrology models with the message interface
+        self.mdr.register('none', self.temperature)
+        self.mdr.register('none', self.hydrology)
+
+        # Calculate all of the monthly precipitation grids
+        self.create_monthly_precipitation_grids()
+
+    def create_monthly_precipitation_grids(self):
+        for month in range(1, 13):
+            grid = self.hydrology.interpolate(self.width, self.height,
+                                              100, month, 6, self.hydrology.tcf_monthly_precipitation)
+            grid[grid < 0] = 0
+            self.precip_gids[month] = grid
+
+    def register_for_bee_events(self):
+        pass
 
     def create_bees(self, bee_number):
         """
@@ -46,8 +95,11 @@ class Ecosystem:
         :rtype: None
 
         """
-        for i in range(0, bee_number):
-            x = bee.Bee(self.mdr, 'Bee {number}'.format(number=i))
+        for new_bee in range(0, bee_number):
+            x = np.random.randint(0, self.height)
+            y = np.random.randint(0, self.height)
+            x = bee.Bee(self.mdr, 'Bee {number}'.format(number=new_bee), x, y)
+            self.mdr.register('bee', x)
             self.entities.append(x)
 
     def create_flowers(self, flower_number):
@@ -59,17 +111,29 @@ class Ecosystem:
         :param flower_number: This is an Integer of the number of flowers that will be created
         :type flower_number: int
         """
-        for i in range(0, flower_number):
-            x = flower.Flower(self.mdr, 'Flower {number}'.format(number=i))
+        for new_flower in range(0, flower_number):
+            x = np.random.randint(0, self.height)
+            y = np.random.randint(0, self.height)
+            x = flower.Flower(self.mdr, 'Flower {number}'.format(number=new_flower), x, y)
+            self.mdr.register('flower', x)
             self.entities.append(x)
+
+    def update_time_counters(self):
+        self.year_day_counter += 1
+        self.monthCounter = datetime.date(self.year, 1, 1) + datetime.timedelta(self.year_day_counter)
+        if self.year_day_counter > 365:
+            self.year_day_counter = 0
+        print(self.year_day_counter)
+        print(self.monthCounter)
 
     def update(self) -> None:
         """
         This function takes all of the different entities, and loops through their respective functions that are
         required for the simulation logic.
         """
-        self.day_counter += 1
-        self.temperature.update(102.7, 65.5, 49.6, 18, self.day_counter)
+
+        self.temperature.update(102.7, 65.5, 49.6, 18, self.year_day_counter)
+        self.update_time_counters()
 
         for ENTITY in self.entities:
             ENTITY.process_incoming_messages()
@@ -78,11 +142,17 @@ class Ecosystem:
             ENTITY.process_current_messages()
 
         for ENTITY in self.entities:
-            ENTITY.update()
+            ENTITY.poll_precipitation(self.precip_gids[self.monthCounter.month])
 
-        if self.day_counter > 365:
-            self.day_counter = 0
+        for ENTITY in self.entities:
+            ENTITY.update()
 
         # print(self.day_counter)
         # print('*--------------------------NEW DAY------------------------------*')
         # print(' ')
+
+
+if __name__ == '__main__':
+    e = Ecosystem('e')
+    for i in range(365):
+        e.update()

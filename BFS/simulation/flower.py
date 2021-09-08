@@ -2,6 +2,7 @@ from BFS.simulation.entity import WorldEntity
 from BFS.simulation.state_machine import State
 import itertools
 import random as rn
+import math
 
 
 def random_choice(low, high):
@@ -11,22 +12,30 @@ def random_choice(low, high):
 class Flower(WorldEntity):
     newid = itertools.count(2000)
 
-    def __init__(self, mediator, name):
+    def __init__(self, mediator, name, x, y):
         super().__init__(mediator, name)
         self.id = next(Flower.newid)
         self.name = name
         self.state = State()
         self.mediator = mediator
         self.messages = dict()
+        # Message Variables
         self.current_flower_message = None
         self.current_bee_message = None
         self.current_environment_message = {}
         self.current_environment_temperature = None
         self.current_incoming_message_id = 0
+        # Environment Variables
+        # This must change: variable only for testing
+        self.x = x
+        self.y = y
+        self.current_water = 0
 
-    def notify(self, message):
+    # Message Handling Methods
+
+    def notify(self, event, message):
         # print(self.name, ": >>> Out >>> : ", message)
-        self.mediator.notify(message, self)
+        self.mediator.notify(event, message)
 
     def receive(self, message):
         # print(self.name, ": <<< In <<< : ", message)
@@ -49,6 +58,7 @@ class Flower(WorldEntity):
         into an integer to make it more easy to work with. I will use this until a better method is
         found.
         """
+
         while self.messages:
             for key, value in self.messages.copy().items():
                 if int(str(value['sender'])[:1]) == 3:
@@ -64,9 +74,15 @@ class Flower(WorldEntity):
 
     def process_current_messages(self):
         self.current_environment_temperature = self.current_environment_message['message']
-        # print('Flower ',self.id,'TEMP: ',self.current_environment_temperature)
+
+    # Environmental Senses Methods: Temperature
+
+    def poll_precipitation(self, current_precip_gird):
+        self.current_water = current_precip_gird[math.floor(self.x), math.floor(self.y)]
+
+    # Entity Update Methods
 
     def update(self):
         self.state.action(self.current_environment_temperature)
         if self.current_environment_temperature <= 32:
-            self.notify(self.create_message(self.id, 'bee', self.state.state_id, ))
+            self.notify('flower', self.create_message(self.id, 'bee', self.state.state_id, ))

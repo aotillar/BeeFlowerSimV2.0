@@ -1,0 +1,30 @@
+Temperate Deciduous Forest: Precipitation
+
+(Intercept) poly(month, degree = 8, raw = T)1 poly(month, degree = 8, raw = T)2
+                    -3.554318e+02                      9.461590e+02                     -8.375958e+02
+poly(month, degree = 8, raw = T)3 poly(month, degree = 8, raw = T)4 poly(month, degree = 8, raw = T)5
+                     3.640662e+02                     -8.735626e+01                      1.214157e+01
+poly(month, degree = 8, raw = T)6 poly(month, degree = 8, raw = T)7 poly(month, degree = 8, raw = T)8
+                    -9.741451e-01                      4.191430e-02                     -7.495953e-04
+Temperate Deciduous Forest Precipitation
+
+    Python Version
+f(x) = -3.554318e+02+9.461590e+02*x-8.375958e+02*x**2+3.640662e+02*x**3-8.735626e+01*x**4+1.214157e+01*x**5-9.741451e-01*x**6+4.191430e-02*x**7-7.495953e-04*x**8
+
+    For Outside Python Testing
+f(x) = -3.554318*10^2+9.461590*10^2*x-8.375958*10^2*x^2+3.640662*10^2*x^3-8.735626*10^1*x^4+1.214157*10^1*x^5-9.741451*10^1*x^6+4.191430*10^2*x^7-7.495953*10^4*x^8
+f(x)=-3.554318*10^{2}+9.461590*10^{2}*x-8.375958*10^{2}*x^{2}+3.640662*10^{2}*x^{3}-8.735626*10^{1}*x^{4}+1.214157*10^{1}*x^{5}-9.741451*10^{-1}*x^{6}+4.191430*10^{-2}*x^{7}-7.495953*10^{-4}*x^{8}
+
+Temperate Deciduous Forest: Temperature
+
+(Intercept) poly(month, degree = 4, raw = T)1 poly(month, degree = 4, raw = T)2
+                       14.1868687                       -11.0438844                         4.4532585
+poly(month, degree = 4, raw = T)3 poly(month, degree = 4, raw = T)4
+                       -0.5043868                         0.0171183
+
+Temperate Deciduous Forest Temperature
+
+Python Version
+f(x)=14.1868687-11.0438844*x+4.4532585*x**2-0.5043868*x**3+0.0171183*x**4
+
+###---###---###

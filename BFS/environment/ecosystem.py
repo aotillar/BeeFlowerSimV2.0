@@ -36,7 +36,6 @@ class Ecosystem:
 
         # Current Ecosystem Models
         # Temperature Water etc
-
         self.year_day_counter = -1
         self.temperature = temperature.TemperatureModel('temperature', self.mdr)
         self.hydrology = hydrology.HydrologyModel('hydrology', self.mdr)
@@ -44,7 +43,7 @@ class Ecosystem:
         # Current Ecosystem Variables
         self.width = 0
         self.height = 100
-        self.precip_gids = dict()
+        self.precip_grids = dict()
 
     def initialize(self,bee_num,flower_num):
         """
@@ -80,7 +79,7 @@ class Ecosystem:
             grid = self.hydrology.interpolate(self.width, self.height,
                                               100, month, 6, self.hydrology.tcf_monthly_precipitation)
             grid[grid < 0] = 0
-            self.precip_gids[month] = grid
+            self.precip_grids[month] = grid
 
     def register_for_bee_events(self):
         pass
@@ -123,7 +122,9 @@ class Ecosystem:
         self.monthCounter = datetime.date(self.year, 1, 1) + datetime.timedelta(self.year_day_counter)
         if self.year_day_counter > 365:
             self.year_day_counter = 0
+        print("Day of Year Counter: ")
         print(self.year_day_counter)
+        print("Month")
         print(self.monthCounter)
 
     def update(self) -> None:
@@ -142,17 +143,17 @@ class Ecosystem:
             ENTITY.process_current_messages()
 
         for ENTITY in self.entities:
-            ENTITY.poll_precipitation(self.precip_gids[self.monthCounter.month])
+            ENTITY.poll_precipitation(self.precip_grids[self.monthCounter.month])
 
         for ENTITY in self.entities:
             ENTITY.update()
 
-        # print(self.day_counter)
-        # print('*--------------------------NEW DAY------------------------------*')
-        # print(' ')
 
 
 if __name__ == '__main__':
     e = Ecosystem('e')
+    e.initialize(10,10)
     for i in range(365):
+        print(e.entities[0].current_environment_temperature)
+        print(e.entities[0].current_water)
         e.update()

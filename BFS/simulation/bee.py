@@ -23,7 +23,7 @@ class Bee(WorldEntity):
         self.current_flower_message = None
         self.current_bee_message = None
         self.current_environment_message = {}
-        self.current_environment_temperature = None
+        self.current_environment_temperature= None
         self.current_incoming_message_id = 0
         # Environment Variables
         # This must change: variable only for testing
